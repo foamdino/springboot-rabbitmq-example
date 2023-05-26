@@ -2,11 +2,13 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.0'
 	id 'io.spring.dependency-management' version '1.1.0'
+	id 'maven-publish'
 }
 
-group = 'com.thg'
-version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
+
+group 'com.thg'
+version = "${version != 'unspecified' ? version : '1.0.0-SNAPSHOT'}"
 
 repositories {
 	mavenCentral()
@@ -20,4 +22,22 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+publishing {
+	repositories {
+		maven {
+			name = "GitHubPackages"
+			url = "https://maven.pkg.github.com/foamdino/springboot-rabbitmq-example"
+			credentials {
+				username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+				password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+			}
+		}
+	}
+	publications {
+		gpr(MavenPublication) {
+			from(components.java)
+		}
+	}
 }
