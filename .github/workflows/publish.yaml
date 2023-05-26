@@ -23,6 +23,6 @@ jobs:
       - name: Publish package
         shell: bash
         run: |
-          ./gradlew build publish -Pversion=$CLEAN_TAG_NAME
+          ./gradlew bootJar publish -Pversion=$CLEAN_TAG_NAME
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
