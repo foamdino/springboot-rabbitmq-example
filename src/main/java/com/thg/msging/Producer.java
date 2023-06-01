@@ -20,7 +20,13 @@ public class Producer {
     }
 
     public void send(String msg) {
-        logger.info("Sending message");
-        rabbitTemplate.convertAndSend(config.exchange, "com.thg.msging", msg);
+        if (config.produce) {
+            try {
+                logger.info("Sending message");
+                rabbitTemplate.convertAndSend(config.exchange, "com.thg.msging", msg);
+            } catch (Exception e) {
+                logger.info(e.getMessage());
+            }
+        }
     }
 }

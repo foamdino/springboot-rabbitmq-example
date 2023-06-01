@@ -15,23 +15,32 @@ import java.util.Map;
 @Configuration
 public class Config {
 
-    @Value("${q}")
     public String qName;
-
-    @Value("${exchange}")
     public String exchange;
-
-    @Value("${messages}")
     public int messages;
-
-    @Value("${spring.rabbitmq.host}")
+    public boolean produce;
+    public boolean consume;
     private String host;
-
-    @Value("${spring.rabbitmq.username}")
     private String username;
-
-    @Value("${spring.rabbitmq.password}")
     private String password;
+
+    public Config(@Value("${q}") String qName,
+                  @Value("${exchange}") String exchange,
+                  @Value("${messages}") int messages,
+                  @Value("${produce}") boolean produce,
+                  @Value("${consume}") boolean consume,
+                  @Value("${spring.rabbitmq.host}") String host,
+                  @Value("${spring.rabbitmq.username}") String username,
+                  @Value("${spring.rabbitmq.password}") String password) {
+        this.qName = qName;
+        this.exchange = exchange;
+        this.messages = messages;
+        this.produce = produce;
+        this.consume = consume;
+        this.host = host;
+        this.username = username;
+        this.password = password;
+    }
 
     @Bean
     public Queue queue() {
