@@ -1,5 +1,7 @@
 package com.thg.msging;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -41,6 +43,12 @@ public class Config {
         this.username = username;
         this.password = password;
     }
+
+//    @Bean
+//    public MeterRegistry getMeterRegistry() {
+//        CompositeMeterRegistry meterRegistry = new CompositeMeterRegistry();
+//        return meterRegistry;
+//    }
 
     @Bean
     public Queue queue() {

@@ -1,6 +1,8 @@
 package com.thg.msging;
 
 import com.rabbitmq.client.Channel;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -19,9 +21,14 @@ public class Consumer  {
 
     private final Config config;
 
+    private Counter consumeMsg;
+    private Counter consumeMsgExceptions;
+
     @Autowired
-    public Consumer(Config config) {
+    public Consumer(Config config, MeterRegistry meterRegistry) {
         this.config = config;
+        consumeMsg = meterRegistry.counter("consumeMsg.success");
+        consumeMsgExceptions = meterRegistry.counter("consumeMsg.exceptions");
     }
 
     @RabbitListener(queues = { "${q}" })
@@ -31,8 +38,10 @@ public class Consumer  {
                 logger.info("Received <" + message + ">");
                 channel.basicAck(tag, false);
                 latch.countDown();
+                consumeMsg.increment();
             } catch (Exception e) {
                 logger.info(e.getMessage());
+                consumeMsgExceptions.increment();
             }
         }
     }
